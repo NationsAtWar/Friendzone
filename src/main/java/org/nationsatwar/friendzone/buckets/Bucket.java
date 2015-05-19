@@ -10,12 +10,17 @@ public class Bucket {
 	
 	private int hierarchyLevel = 1;
 	private int playerCapacity = 0;
+
+	private boolean restrictPlayersToHierarchy;
+	private boolean restrictBucketsToHierarchy;
+	
+	private List<String> allowedSpans;
+	private List<Bucket> spanBuckets;
 	
 	private Bucket parentBucket;
 	private List<Bucket> childBuckets = new ArrayList<Bucket>();
 	
 	private List<UUID> playerList = new ArrayList<UUID>();
-	
 	private List<String> tags = new ArrayList<String>();
 	
 	protected Bucket() {}
@@ -29,7 +34,8 @@ public class Bucket {
 	 * Adds a player to this bucket. Also adds the player to all parent buckets.
 	 * 
 	 * @param player The player you wish to add to the bucket
-	 * @return Returns false if a player can't be added due to capacity being reached, true otherwise
+	 * @return Returns false if a player can't be added due to capacity being reached or if bucket
+	 * 		restricts players outside the hierarchy. True otherwise
 	 */
 	public boolean addPlayer(EntityPlayer player) {
 		
@@ -37,6 +43,10 @@ public class Bucket {
 			return false;
 		
 		UUID playerUUID = player.getUniqueID();
+		
+		if (restrictPlayersToHierarchy && !existsInHierarchy(playerUUID))
+			return false;
+			
 		addPlayer(playerUUID);
 		return true;
 	}
@@ -138,6 +148,77 @@ public class Bucket {
 		return true;
 	}
 	
+	/**
+	 * Adds an allowed span to the bucket
+	 */
+	public void addAllowedSpan(String spanTag) {
+		
+		allowedSpans.add(spanTag);
+	}
+	
+	/**
+	 * Removes an allowed span from the bucket
+	 */
+	public void removeAllowedSpan(String spanTag) {
+		
+		allowedSpans.remove(spanTag);
+	}
+	
+	/**
+	 * Checks to see if the bucket allows the specified span
+	 * 
+	 * @param spanTag The span tag you wish to inquire about
+	 */
+	public boolean allowsSpan(String spanTag) {
+		
+		if (allowedSpans.contains(spanTag))
+			return true;
+		else
+			return false;
+	}
+	
+	/**
+	 * Adds a bucket to the span bucket list
+	 * 
+	 * @param bucket The bucket you wish to add to the span bucket list
+	 * @return Returns false if the span bucket does not contain an allowed tag or if the bucket 
+	 * 		exists outside the hierarchy when restricted. True otherwise
+	 */
+	public boolean addSpanBucket(Bucket bucket) {
+		
+		if (!spanBucketAllowed(bucket))
+			return false;
+		
+		if (restrictBucketsToHierarchy && !existsInHierarchy(bucket))
+			return false;
+		
+		spanBuckets.add(bucket);
+		return true;
+	}
+	
+	private boolean spanBucketAllowed(Bucket bucket) {
+		
+		for (String allowedSpan : allowedSpans)
+			if (bucket.allowsSpan(allowedSpan))
+				return true;
+		
+		return false;
+	}
+	
+	/**
+	 * Sets the maximum amount of players this bucket can hold, 0 is unlimited
+	 * 
+	 * @return Returns false if the new playerCapacity is less than the bucket's current player count
+	 */
+	public boolean setPlayerCapacity(int playerCapacity) {
+		
+		if (playerCapacity > 0 && playerCapacity < playerList.size())
+			return false;
+		
+		this.playerCapacity = playerCapacity;
+		return true;
+	}
+	
 	private boolean isChildBucket(Bucket bucket) {
 		
 		if (childBuckets.contains(bucket))
@@ -153,6 +234,33 @@ public class Bucket {
 	private int getHierarchyLevel() {
 		
 		return hierarchyLevel;
+	}
+	
+	private boolean existsInHierarchy(Bucket bucket) {
+		
+		if (getTopLevelBucket().isChildBucket(bucket))
+			return true;
+		
+		return false;
+	}
+	
+	private boolean existsInHierarchy(UUID playerUUID) {
+		
+		if (getTopLevelBucket().playerList.contains(playerUUID))
+			return true;
+		
+		return false;
+	}
+	
+	private Bucket getTopLevelBucket() {
+		
+		if (hierarchyLevel == 1)
+			return this;
+		
+		if (parentBucket.getHierarchyLevel() == 1)
+			return parentBucket;
+		
+		return parentBucket.getTopLevelBucket();
 	}
 	
 	private boolean hasParent() {
