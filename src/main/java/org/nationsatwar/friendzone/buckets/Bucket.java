@@ -206,6 +206,26 @@ public class Bucket {
 	}
 	
 	/**
+	 * Sets whether or not to allow players that exist outside the hierarchy
+	 * 
+	 * @param value The value you wish to set
+	 */
+	public void setPlayerHierarchyRestriction(boolean value) {
+		
+		restrictPlayersToHierarchy = value;
+	}
+	
+	/**
+	 * Sets whether or not to allow buckets that exist outside the hierarchy
+	 * 
+	 * @param value The value you wish to set
+	 */
+	public void setBucketHierarchyRestriction(boolean value) {
+		
+		restrictBucketsToHierarchy = value;
+	}
+	
+	/**
 	 * Sets the maximum amount of players this bucket can hold, 0 is unlimited
 	 * 
 	 * @return Returns false if the new playerCapacity is less than the bucket's current player count
