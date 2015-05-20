@@ -11,8 +11,8 @@ public class Bucket {
 	private int hierarchyLevel = 1;
 	private int playerCapacity = 0;
 
-	private boolean restrictPlayersToHierarchy;
-	private boolean restrictBucketsToHierarchy;
+	private boolean restrictPlayersToParent;
+	private boolean restrictBucketsToParent;
 	
 	private List<String> allowedSpans;
 	private List<Bucket> spanBuckets;
@@ -44,7 +44,7 @@ public class Bucket {
 		
 		UUID playerUUID = player.getUniqueID();
 		
-		if (restrictPlayersToHierarchy && !existsInHierarchy(playerUUID))
+		if (restrictPlayersToParent && !parentBucket.containsPlayer(player))
 			return false;
 			
 		addPlayer(playerUUID);
@@ -189,7 +189,7 @@ public class Bucket {
 		if (!spanBucketAllowed(bucket))
 			return false;
 		
-		if (restrictBucketsToHierarchy && !existsInHierarchy(bucket))
+		if (restrictBucketsToParent && !parentBucket.isChildBucket(bucket))
 			return false;
 		
 		spanBuckets.add(bucket);
@@ -212,7 +212,7 @@ public class Bucket {
 	 */
 	public void setPlayerHierarchyRestriction(boolean value) {
 		
-		restrictPlayersToHierarchy = value;
+		restrictPlayersToParent = value;
 	}
 	
 	/**
@@ -222,7 +222,7 @@ public class Bucket {
 	 */
 	public void setBucketHierarchyRestriction(boolean value) {
 		
-		restrictBucketsToHierarchy = value;
+		restrictBucketsToParent = value;
 	}
 	
 	/**
@@ -256,6 +256,7 @@ public class Bucket {
 		return hierarchyLevel;
 	}
 	
+	/* Potentially useful
 	private boolean existsInHierarchy(Bucket bucket) {
 		
 		if (getTopLevelBucket().isChildBucket(bucket))
@@ -263,7 +264,7 @@ public class Bucket {
 		
 		return false;
 	}
-	
+
 	private boolean existsInHierarchy(UUID playerUUID) {
 		
 		if (getTopLevelBucket().playerList.contains(playerUUID))
@@ -282,6 +283,7 @@ public class Bucket {
 		
 		return parentBucket.getTopLevelBucket();
 	}
+	*/
 	
 	private boolean hasParent() {
 		
