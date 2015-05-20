@@ -7,11 +7,11 @@ import org.nationsatwar.palette.KeyBindings;
 
 public class ClientProxy extends CommonProxy {
 
-	public static KeyBinding debugKey;
+	public static KeyBinding friendzoneKey;
 	
 	@Override
 	public void registerKeybindings() {
 		
-		debugKey = KeyBindings.registerKey(Keyboard.KEY_R, "debugKey");
+		friendzoneKey = KeyBindings.registerKey(Keyboard.KEY_F, "friendzoneKey");
 	}
 }
