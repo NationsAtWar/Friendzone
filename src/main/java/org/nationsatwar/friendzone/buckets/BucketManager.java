@@ -21,6 +21,25 @@ public class BucketManager {
 		return bucket;
 	}
 	
+	protected static void removeBucket(String bucketName) {
+		
+		if (!bucketExists(bucketName))
+			return;
+		
+		Bucket bucket = getBucket(bucketName);
+		
+		List<String> bucketsToRemove = new ArrayList<String>();
+		
+		for (String checkBucket : bucketList.keySet())
+			if (bucket.getChildBuckets().contains(bucketList.get(checkBucket)))
+				bucketsToRemove.add(checkBucket);
+		
+		for (String bucketToRemove : bucketsToRemove)
+			bucketList.remove(bucketToRemove);
+			
+		bucketList.remove(bucketName);
+	}
+	
 	protected static Bucket getBucket(String bucketName) {
 		
 		if (bucketExists(bucketName))
@@ -38,6 +57,26 @@ public class BucketManager {
 				buckets.add(bucket);
 		
 		return buckets;
+	}
+	
+	protected static List<Bucket> getAllBuckets() {
+		
+		List<Bucket> buckets = new ArrayList<Bucket>();
+
+		for (Bucket bucket : bucketList.values())
+			buckets.add(bucket);
+		
+		return buckets;
+	}
+	
+	protected static List<String> getAllBucketNames() {
+		
+		List<String> bucketNames = new ArrayList<String>();
+
+		for (String bucketName : bucketList.keySet())
+			bucketNames.add(bucketName);
+		
+		return bucketNames;
 	}
 	
 	private static boolean bucketExists(String bucketName) {

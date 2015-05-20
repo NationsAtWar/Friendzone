@@ -7,7 +7,9 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
+import org.nationsatwar.friendzone.events.ChatCommands;
 import org.nationsatwar.friendzone.proxy.CommonProxy;
 
 @Mod(modid = Friendzone.MODID, 
@@ -44,5 +46,11 @@ public class Friendzone {
 	public void postInit(FMLPostInitializationEvent event) {
 		
 		
+	}
+	
+	@EventHandler
+	public void commandEvent(FMLServerStartingEvent event) {
+		
+		event.registerServerCommand(new ChatCommands());
 	}
 }

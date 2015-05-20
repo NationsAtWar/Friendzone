@@ -256,6 +256,19 @@ public class Bucket {
 		return hierarchyLevel;
 	}
 	
+	protected List<Bucket> getChildBuckets() {
+		
+		List<Bucket> buckets = new ArrayList<Bucket>();
+		
+		for (Bucket childBucket : childBuckets) {
+			
+			buckets.add(childBucket);
+			buckets.addAll(childBucket.getChildBuckets());
+		}
+		
+		return buckets;
+	}
+	
 	/* Potentially useful
 	private boolean existsInHierarchy(Bucket bucket) {
 		

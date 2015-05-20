@@ -16,12 +16,22 @@ public class BucketAPI {
 	}
 	
 	/**
+	 * Removes the specified bucket
+	 * 
+	 * @param bucketName The name of the bucket you wish to remove
+	 */
+	public static void removeBucket(String bucketName) {
+		
+		BucketManager.removeBucket(bucketName);
+	}
+	
+	/**
 	 * Gets a bucket by name
 	 * 
 	 * @param bucketName The name of the bucket you wish to retrieve
 	 * @return The bucket, null if name doesn't exist
 	 */
-	public static Bucket getGucket(String bucketName) {
+	public static Bucket getBucket(String bucketName) {
 		
 		return BucketManager.getBucket(bucketName);
 	}
@@ -35,5 +45,21 @@ public class BucketAPI {
 	public static List<Bucket> getBucketsByTag(String tag) {
 		
 		return BucketManager.getBucketsByTag(tag);
+	}
+	
+	/**
+	 * Returns a list of all buckets
+	 */
+	public static List<Bucket> getAllBuckets() {
+		
+		return BucketManager.getAllBuckets();
+	}
+	
+	/**
+	 * Returns a list of all bucket names
+	 */
+	public static List<String> getAllBucketNames() {
+		
+		return BucketManager.getAllBucketNames();
 	}
 }
