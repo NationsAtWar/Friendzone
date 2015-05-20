@@ -5,11 +5,30 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.nationsatwar.palette.database.JSONUtil;
+
 public class BucketManager {
 	
 	private static Map<String, Bucket> bucketList = new HashMap<String, Bucket>();
 	
 	private BucketManager() {}
+	
+	protected static void saveBuckets() {
+		
+		for (String bucketName : bucketList.keySet()) {
+			
+			Bucket bucket = getBucket(bucketName);
+			JSONUtil.saveObject("buckets", bucketName, bucket);
+		}
+	}
+	
+	protected static void loadBuckets() {
+		
+		Map<String, Object> objectList = JSONUtil.loadAllObjectsWithFilename("buckets", new Bucket());
+		
+		for (String bucketName : objectList.keySet())
+			bucketList.put(bucketName, (Bucket) objectList.get(bucketName));
+	}
 	
 	protected static Bucket createBucket(String bucketName) {
 		
@@ -18,6 +37,9 @@ public class BucketManager {
 			
 		Bucket bucket = new Bucket();
 		bucketList.put(bucketName, bucket);
+		
+		saveBuckets();
+		
 		return bucket;
 	}
 	

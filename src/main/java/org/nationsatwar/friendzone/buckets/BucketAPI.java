@@ -4,6 +4,16 @@ import java.util.List;
 
 public class BucketAPI {
 	
+	public static void saveAllBuckets() {
+		
+		BucketManager.saveBuckets();
+	}
+	
+	public static void loadAllBuckets() {
+		
+		BucketManager.loadBuckets();
+	}
+	
 	/**
 	 * Creates a new bucket
 	 * 

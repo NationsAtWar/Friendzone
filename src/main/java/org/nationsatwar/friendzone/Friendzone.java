@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
+import org.nationsatwar.friendzone.buckets.BucketAPI;
 import org.nationsatwar.friendzone.events.ChatCommands;
 import org.nationsatwar.friendzone.proxy.CommonProxy;
 
@@ -39,7 +40,7 @@ public class Friendzone {
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		
-		
+		BucketAPI.loadAllBuckets();
 	}
 	
 	@EventHandler
