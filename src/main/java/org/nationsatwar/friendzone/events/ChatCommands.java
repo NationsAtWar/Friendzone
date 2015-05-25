@@ -1,54 +1,23 @@
 package org.nationsatwar.friendzone.events;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.command.CommandException;
-import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.BlockPos;
 
 import org.nationsatwar.friendzone.buckets.Bucket;
 import org.nationsatwar.friendzone.buckets.BucketAPI;
+import org.nationsatwar.palette.CommandEvent;
 import org.nationsatwar.palette.chat.ChatMessage;
 
-public class ChatCommands implements ICommand {
-	
-	private List<String> aliases;
+public class ChatCommands extends CommandEvent {
 	
 	private String selectedBucketName = "";
 	private Bucket selectedBucket;
 	
-	public ChatCommands() {
+	public ChatCommands(String command) {
 		
-		aliases = new ArrayList<String>();
-		aliases.add("friendzone");
-		aliases.add("fz");
-	}
-
-	@Override
-	public int compareTo(Object o) {
-		
-		return 0;
-	}
-
-	@Override
-	public String getName() {
-		
-		return "friendzone";
-	}
-
-	@Override
-	public String getCommandUsage(ICommandSender sender) {
-		
-		return "friendzone <add/remove/get> (bucket name)";
-	}
-
-	@Override
-	public List<String> getAliases() {
-		
-		return aliases;
+		super(command);
+		addAlias("fz");
 	}
 	
 	@Override
@@ -79,7 +48,7 @@ public class ChatCommands implements ICommand {
 				return;
 			}
 			
-			String bucketName = combineArgs(args, 1, args.length - 1);
+			String bucketName = combineArgs(args, 1);
 			
 			BucketAPI.createBucket(bucketName);
 			ChatMessage.sendMessage(player, "Created new bucket: " + bucketName);
@@ -96,7 +65,7 @@ public class ChatCommands implements ICommand {
 				return;
 			}
 			
-			String bucketName = combineArgs(args, 1, args.length - 1);
+			String bucketName = combineArgs(args, 1);
 			
 			BucketAPI.removeBucket(bucketName);
 			ChatMessage.sendMessage(player, "Removed bucket: " + bucketName);
@@ -131,7 +100,7 @@ public class ChatCommands implements ICommand {
 				return;
 			}
 			
-			String bucketName = combineArgs(args, 1, args.length - 1);
+			String bucketName = combineArgs(args, 1);
 			
 			selectedBucket = BucketAPI.getBucket(bucketName);
 			
@@ -177,7 +146,7 @@ public class ChatCommands implements ICommand {
 					return;
 				}
 				
-				String bucketName = combineArgs(args, 2, args.length - 1);
+				String bucketName = combineArgs(args, 2);
 				Bucket parentBucket = BucketAPI.getBucket(bucketName);
 				
 				if (parentBucket != null) {
@@ -194,37 +163,5 @@ public class ChatCommands implements ICommand {
 		}
 		
 		ChatMessage.sendMessage(player, "Unrecognized command");
-	}
-	
-	private String combineArgs(String[] args, int startArgument, int endArgument) {
-		
-		if (args.length < endArgument + 1 || startArgument > endArgument || startArgument < 0)
-			return "Error";
-		
-		String combinedString = args[startArgument];
-		
-		for (int i = startArgument + 1; i <= endArgument; i++)
-			combinedString += " " + args[i];
-		
-		return combinedString;
-	}
-
-	@Override
-	public boolean canCommandSenderUse(ICommandSender sender) {
-		
-		return true;
-	}
-
-	@Override
-	public List<?> addTabCompletionOptions(ICommandSender sender, String[] args,
-			BlockPos pos) {
-		
-		return null;
-	}
-
-	@Override
-	public boolean isUsernameIndex(String[] args, int index) {
-		
-		return false;
 	}
 }

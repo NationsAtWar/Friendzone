@@ -52,6 +52,6 @@ public class Friendzone {
 	@EventHandler
 	public void commandEvent(FMLServerStartingEvent event) {
 		
-		event.registerServerCommand(new ChatCommands());
+		event.registerServerCommand(new ChatCommands("friendzone"));
 	}
 }
